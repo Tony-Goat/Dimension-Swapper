@@ -45,7 +45,7 @@ fn main() {
         })
         .collect();
 
-    let p: u32 = (1..=time_dim as u32)
+    let p: u32 = (1..=time_dim)
         .into_par_iter()
         .progress_count(time_dim as u64)
         .map(|f| resize_worker(&resized_imgs, time_dim, old_width, old_height, f))
@@ -54,12 +54,12 @@ fn main() {
     println!("{p} frames processed successfully.");
 }
 
-fn resize_worker(src_imgs: &Vec<RgbImage>, time: u32, width: u32, height: u32, frame: u32) -> u32 {
+fn resize_worker(src_imgs: &[RgbImage], time: u32, width: u32, height: u32, frame: u32) -> u32 {
     //Create the new image buffer with the right size
     let mut new_img = RgbImage::new(time, height);
     for x in 0..time {
         for y in 0..height {
-            new_img.put_pixel(x, y, src_imgs[x as usize].get_pixel(frame - 1, y).clone());
+            new_img.put_pixel(x, y, *src_imgs[x as usize].get_pixel(frame - 1, y));
         }
     }
 
